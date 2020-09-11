@@ -1,0 +1,64 @@
+---
+title: "Get Grades"
+author: "Adam Canton"
+date: "9/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+```
+
+
+```{r}
+grades <- read.csv(file = "F:/R For Real/Grade-Sorter-Schoology/gradebook-export.csv", sep = ",", header = TRUE)
+```
+
+```{r}
+# Reset ID column
+grades$Unique.User.ID <- as.character(grades$Unique.User.ID)
+grades$Unique.User.ID <- substr(grades$Unique.User.ID, start = 3, stop = 8)
+grades$Unique.User.ID <- as.numeric(grades$Unique.User.ID)
+```
+
+```{r}
+# Add in Class
+grades = grades %>% mutate(Class = case_when(Unique.User.ID %in% c(352337, 878481, 870579, 331673) ~ "H5228-2",
+                                             Unique.User.ID %in% c(981660, 857004, 868920, 857028, 871969, 857496, 920079, 858512) ~ "H7566-2",
+                                             Unique.User.ID %in% c(957331,864622,958238,856383,857567,874818,870315,309051,857269) ~ "H7566-3",
+                                             Unique.User.ID %in% c(871629) ~ "H5228-3",
+                                             Unique.User.ID %in% c(868902, 868972, 879027) ~ "H5228-4",
+                                             Unique.User.ID %in% c(861136, 353243, 878619, 869930, 953589, 857020, 864278, 859259, 875375, 857067) ~ "H7566-4",
+                                             Unique.User.ID %in% c(864878, 974459) ~ "H5231-1",
+                                             Unique.User.ID %in% c(905582, 980940, 333271, 864809) ~ "H5231-2",
+                                             Unique.User.ID %in% c(979311, 855985, 342699, 309921, 877332) ~ "H5231-3",
+                                             Unique.User.ID %in% c(941903, 870432, 869418, 879438, 871261, 870711, 870736, 904779, 872582, 870206, 869744, 869085)
+                                             ~ "H5228-6",
+                                             Unique.User.ID %in% c(857504, 905811, 856395, 316633, 856403, 331368, 922230, 859993, 849098, 856945, 943048, 926002,
+                                                                   313371, 324369, 857542, 320010, 338294, 856006, 864263, 853420, 950078, 857000, 354831, 846840,
+                                                                   857464, 8657638, 877110, 352798,857503, 349957, 857556, 331296, 857139, 845145, 925401, 310142,
+                                                                   863367, 857008, 336607, 865206, 844050, 843622, 864183, 857368, 876169, 347162, 868761, 857466,
+                                                                   988106, 874562, 858845, 311537, 857571, 856424, 352369, 856994, 863342, 309712, 938047, 343363,
+                                                                   856893, 339554, 874579, 327120, 856928, 845766) ~ "H5222-93",
+                                             Unique.User.ID %in% c(901642, 856373, 907041, 870124, 305010, 310922, 869245, 346729, 858162, 306213, 860942, 857021,
+                                                                   857093, 329061, 861761, 860763, 909080, 856044, 856105, 944862, 857247, 348319, 861691, 856174,
+                                                                   869804, 874481, 349012, 857778, 873179, 871954, 874560, 908381, 906582, 307026, 950527, 311916,
+                                                                   870874, 880648, 975201, 952951, 868862, 944626, 870436, 858874, 873488, 870738, 856963, 871617,
+                                                                   856949) ~ "H7566-5"))
+```
+
+
+```{r}
+# Get honors grades
+honorsgrades <- cbind(grades[,c(1:3,65)], grades[,grepl("Honors", colnames(grades))])
+```
+
+
+```{r}
+onlevelgrades <-  cbind(grades[,c(1:3,65)], grades[,grepl("On.Level", colnames(grades))])
+```
+
